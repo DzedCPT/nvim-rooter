@@ -1,9 +1,10 @@
+local M = {}
 
 local NvimRooter= {}
 
-NvimRooter.setup = function(config)
-	print("setup called")
+M.setup = function(config)
+end
 end
 
 
-return NvimRooter
+return M
