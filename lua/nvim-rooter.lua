@@ -12,7 +12,15 @@ M.config = {
 
 M.setup = function(config)
 end
+local function root()
+	print("root")
 end
 
+local group = vim.api.nvim_create_augroup("NvimRooter", { clear = true })
+vim.api.nvim_create_autocmd({ "VimEnter", "BufReadPost", "BufEnter" }, {
+	group=group,
+	pattern = "*", -- Applies to all files
+	callback = root,
+})
 
 return M
