@@ -5,8 +5,8 @@ local H = {}
 
 H.default_config = {
 	-- TODO: Need to implement more config fields
-	-- rooter_cd_cmd = 'cd'
-	-- rooter_silent_chdir = false,
+	rooter_cd_cmd = "cd",
+	rooter_silent_chdir = true,
 	-- rooter_resolve_links = false
 	rooter_manual_only = false,
 	rooter_buftypes = { "" },
@@ -25,6 +25,8 @@ H.update_config = function(config)
 	vim.validate({
 		root_patterns = { config.root_patterns, "table", true },
 		rooter_manual_only = { config.rooter_manual_only, "boolean" },
+		rooter_silent_chdir = { config.rooter_silent_chdir, "boolean" },
+		rooter_cd_cmd = { config.rooter_cd_cmd, "string" },
 	})
 
 	return config
@@ -69,7 +71,10 @@ H.change_workdir = function(dir)
 	if dir == vim.fn.getcwd() then
 		return
 	end
-	vim.api.nvim_set_current_dir(dir)
+	vim.cmd(M.config.rooter_cd_cmd .. " " .. dir)
+	if not M.config.rooter_silent_chdir then
+		print("rooter " .. M.config.rooter_cd_cmd .. "  " .. dir)
+	end
 end
 
 H.rooter_callback_active = function()
