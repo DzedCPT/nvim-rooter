@@ -115,7 +115,6 @@ M.root = function()
 			break
 		else
 			current_dir = H.parent_dir(current_dir)
-			-- What if root is never found? How do we get out of this infinite loop?
 		end
 	end
 
