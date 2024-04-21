@@ -12,7 +12,7 @@ M.config = {
 
 M.setup = function(config) end
 
-local current_dir =  function()
+local current_dir = function()
 	return vim.fn.expand("%:p:h") -- Gets the current file's directory
 end
 
@@ -34,7 +34,7 @@ local parent_dir = function(dir)
 	return vim.fn.fnamemodify(dir, ":h")
 end
 
-local change_workdir =function(dir)
+local change_workdir = function(dir)
 	if dir == vim.fn.getcwd() then
 		return
 	end
@@ -48,7 +48,7 @@ local root = function()
 	while not root_found do
 		if is_root(current_dir) then
 			root_found = true
-		elseif current_dir == '/' then
+		elseif current_dir == "/" then
 			break
 		else
 			current_dir = parent_dir(current_dir)
