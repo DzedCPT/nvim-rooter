@@ -23,7 +23,8 @@ H.update_config = function(config)
 
 	-- TODO: Maybe good to check here that this is a table of strings:
 	vim.validate({
-		root_patterns = { config.root_patterns, "table", true },
+		rooter_patterns = { config.rooter_patterns, "table", true },
+		rooter_buftypes = { config.rooter_buftypes, "table", true },
 		rooter_manual_only = { config.rooter_manual_only, "boolean" },
 		rooter_silent_chdir = { config.rooter_silent_chdir, "boolean" },
 		rooter_cd_cmd = { config.rooter_cd_cmd, "string" },
@@ -37,12 +38,12 @@ M.setup = function(config)
 end
 
 H.str_in_table = function(str, tbl)
-    for _, value in ipairs(tbl) do
-        if value == str then
-            return true
-        end
-    end
-    return false
+	for _, value in ipairs(tbl) do
+		if value == str then
+			return true
+		end
+	end
+	return false
 end
 
 H.current_dir = function()
@@ -82,16 +83,15 @@ H.rooter_callback_active = function()
 		return false
 	end
 
-	if not H.str_in_table(vim.bo.buftype, M.config.rooter_buftypes ) then
+	if not H.str_in_table(vim.bo.buftype, M.config.rooter_buftypes) then
 		return false
 	end
 
 	return true
-
 end
 
 H.root_callback = function()
-	if not H.rooter_callback_active()  then
+	if not H.rooter_callback_active() then
 		return
 	end
 	M.root()
