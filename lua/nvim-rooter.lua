@@ -8,7 +8,7 @@ H.default_config = {
 	-- rooter_cd_cmd = 'cd'
 	-- rooter_silent_chdir = false,
 	-- rooter_resolve_links = false
-	-- rooter_manual_only=false
+	rooter_manual_only = false,
 	-- rooter_change_directory_for_non_project_files=''
 	rooter_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" },
 }
@@ -21,8 +21,10 @@ H.update_config = function(config)
 	config = vim.tbl_deep_extend("force", vim.deepcopy(H.default_config), config or {})
 
 	-- TODO: Maybe good to check here that this is a table of strings:
-	print("hello")
-	vim.validate({ root_patterns = { config.root_patterns, "table", true } })
+	vim.validate({
+		root_patterns = { config.root_patterns, "table", true },
+		rooter_manual_only = { config.rooter_manual_only, "boolean" },
+	})
 
 	return config
 end
@@ -61,6 +63,13 @@ H.change_workdir = function(dir)
 	vim.api.nvim_set_current_dir(dir)
 end
 
+H.root_callback = function()
+	if M.config.rooter_manual_only then
+		return
+	end
+	M.root()
+end
+
 M.root = function()
 	local current_dir = H.current_dir()
 
@@ -86,7 +95,7 @@ local group = vim.api.nvim_create_augroup("NvimRooter", { clear = true })
 vim.api.nvim_create_autocmd({ "VimEnter", "BufReadPost", "BufEnter" }, {
 	group = group,
 	pattern = "*", -- Applies to all files
-	callback = M.root,
+	callback = H.root_callback,
 })
 
 -- For debugging:
