@@ -9,6 +9,7 @@ H.default_config = {
 	-- rooter_silent_chdir = false,
 	-- rooter_resolve_links = false
 	rooter_manual_only = false,
+	rooter_buftypes = { "" },
 	-- rooter_change_directory_for_non_project_files=''
 	rooter_patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" },
 }
@@ -30,8 +31,16 @@ H.update_config = function(config)
 end
 
 M.setup = function(config)
-	print(config)
 	M.config = H.update_config(config)
+end
+
+H.str_in_table = function(str, tbl)
+    for _, value in ipairs(tbl) do
+        if value == str then
+            return true
+        end
+    end
+    return false
 end
 
 H.current_dir = function()
@@ -63,8 +72,21 @@ H.change_workdir = function(dir)
 	vim.api.nvim_set_current_dir(dir)
 end
 
-H.root_callback = function()
+H.rooter_callback_active = function()
 	if M.config.rooter_manual_only then
+		return false
+	end
+
+	if not H.str_in_table(vim.bo.buftype, M.config.rooter_buftypes ) then
+		return false
+	end
+
+	return true
+
+end
+
+H.root_callback = function()
+	if not H.rooter_callback_active()  then
 		return
 	end
 	M.root()
@@ -101,6 +123,6 @@ vim.api.nvim_create_autocmd({ "VimEnter", "BufReadPost", "BufEnter" }, {
 -- For debugging:
 -- root()
 
-vim.api.nvim_create_user_command('Root', M.root, {})
+vim.api.nvim_create_user_command("Root", M.root, {})
 
 return M
