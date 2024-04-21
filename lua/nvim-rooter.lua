@@ -12,36 +12,36 @@ M.config = {
 
 M.setup = function(config) end
 
-function current_dir()
+local current_dir =  function()
 	return vim.fn.expand("%:p:h") -- Gets the current file's directory
 end
 
-function has(dir, filename)
+local dir_contains_pattern = function(dir, filename)
 	-- ZZZ: Can probably make this matching more complex using glob patterns.
 	return vim.fn.glob(dir .. "/" .. filename) ~= ""
 end
 
-function is_root(dir)
+local is_root = function(dir)
 	for _, root_pattern in ipairs(M.config.rooter_patterns) do
-		if has(dir, root_pattern) then
+		if dir_contains_pattern(dir, root_pattern) then
 			return true
 		end
 	end
 	return false
 end
 
-function parent_dir(dir)
+local parent_dir = function(dir)
 	return vim.fn.fnamemodify(dir, ":h")
 end
 
-function change_workdir(dir)
+local change_workdir =function(dir)
 	if dir == vim.fn.getcwd() then
 		return
 	end
 	vim.api.nvim_set_current_dir(dir)
 end
 
-local function root()
+local root = function()
 	local current_dir = current_dir()
 
 	root_found = false
