@@ -1,3 +1,9 @@
+-- Neovim plugin to change the working directory to the project root.
+-- MIT License Copyright (c) 2024 Jedda Boyle
+
+M.setup = function(config)
+	M.config = H.update_config(config)
+end
 -- Table of module level context to be exported
 local M = {}
 -- Table for internal Helper context
@@ -97,6 +103,12 @@ H.root_callback = function()
 	M.root()
 end
 
+
+M.setup = function(config)
+	M.config = H.update_config(config)
+end
+
+-- Modules main function to actually root the workdir:
 M.root = function()
 	local current_dir = H.current_dir()
 
