@@ -27,20 +27,18 @@ H.update_config = function(config)
 
 	config = vim.tbl_deep_extend("force", vim.deepcopy(H.default_config), config or {})
 
-	-- TODO: Maybe good to check here that this is a table of strings:
 	vim.validate({
+		-- TODO: Maybe good to check here that this is a table of strings:
 		rooter_patterns = { config.rooter_patterns, "table", true },
+		-- TODO: Maybe good to check here that this is a table of strings:
 		rooter_buftypes = { config.rooter_buftypes, "table", true },
 		rooter_manual_only = { config.rooter_manual_only, "boolean" },
 		rooter_silent_chdir = { config.rooter_silent_chdir, "boolean" },
+		-- TODO: Check config value is actually a valid vim cd cmd:
 		rooter_cd_cmd = { config.rooter_cd_cmd, "string" },
 	})
 
 	return config
-end
-
-M.setup = function(config)
-	M.config = H.update_config(config)
 end
 
 H.str_in_table = function(str, tbl)
@@ -53,11 +51,11 @@ H.str_in_table = function(str, tbl)
 end
 
 H.current_dir = function()
-	return vim.fn.expand("%:p:h") -- Gets the current file's directory
+	-- Gets the current file's directory
+	return vim.fn.expand("%:p:h")
 end
 
 H.dir_contains_pattern = function(dir, pattern)
-	-- ZZZ: Can probably make this matching more complex using glob patterns.
 	return vim.fn.glob(dir .. "/" .. pattern) ~= ""
 end
 
@@ -103,7 +101,6 @@ H.root_callback = function()
 	M.root()
 end
 
-
 M.setup = function(config)
 	M.config = H.update_config(config)
 end
@@ -137,9 +134,7 @@ vim.api.nvim_create_autocmd({ "VimEnter", "BufReadPost", "BufEnter" }, {
 	callback = H.root_callback,
 })
 
--- For debugging:
--- root()
-
+-- Setup user command for manual rooting
 vim.api.nvim_create_user_command("Root", M.root, {})
 
 return M
