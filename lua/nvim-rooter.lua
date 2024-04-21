@@ -71,4 +71,6 @@ vim.api.nvim_create_autocmd({ "VimEnter", "BufReadPost", "BufEnter" }, {
 -- For debugging:
 -- root()
 
+vim.api.nvim_create_user_command('Root', M.root, {})
+
 return M
